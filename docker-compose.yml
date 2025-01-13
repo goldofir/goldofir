@@ -1,31 +1,28 @@
 version: "3.7"
 
 services:
-  goldofir-web:
-    image: ghcr.io/${GITHUB_USERNAME}/goldofir:latest
-    container_name: goldofir-web
+  goldofir_goldofir-web:
+    image: ghcr.io/goldofir/goldofir:latest
+    container_name: goldofir_goldofir-web
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: unless-stopped
     networks:
       - network_public
+    volumes:
+      - goldofir_data:/usr/share/nginx/html
     deploy:
       labels:
         - "traefik.enable=true"
-        
-        # Middleware de redirecionamento (HTTPS obrigatório)
         - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
         - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
-        
-        # Roteador para o domínio principal (goldofir.me)
         - "traefik.http.routers.goldofir.rule=Host(`goldofir.me`)"
         - "traefik.http.routers.goldofir.entrypoints=websecure"
         - "traefik.http.routers.goldofir.tls.certresolver=letsencryptresolver"
-        
-        # Roteador HTTP para capturar e redirecionar para HTTPS
         - "traefik.http.routers.goldofir-http.rule=Host(`goldofir.me`)"
         - "traefik.http.routers.goldofir-http.entrypoints=web"
         - "traefik.http.routers.goldofir-http.middlewares=redirect-https@docker"
-        
-        # Configuração do serviço
         - "traefik.http.services.goldofir.loadbalancer.server.port=80"
 
 networks:
@@ -34,5 +31,4 @@ networks:
 
 volumes:
   goldofir_data:
-    external: true
     name: goldofir_data 
