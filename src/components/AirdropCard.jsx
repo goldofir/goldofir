@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 const AirdropCard = () => {
+  // Data fixa de término (140 dias a partir de hoje)
+  const END_DATE = new Date();
+  END_DATE.setDate(END_DATE.getDate() + 140);
+  END_DATE.setHours(0, 0, 0, 0); // Define para meia-noite
+
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -9,39 +14,44 @@ const AirdropCard = () => {
   });
 
   useEffect(() => {
-    // Data final do contador (140 dias a partir de agora)
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 140);
-
-    const timer = setInterval(() => {
+    const calculateTimeLeft = () => {
       const now = new Date().getTime();
-      const distance = endDate.getTime() - now;
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      setTimeLeft({
-        days,
-        hours,
-        minutes,
-        seconds
-      });
+      const distance = END_DATE.getTime() - now;
 
       if (distance < 0) {
-        clearInterval(timer);
-        setTimeLeft({
+        return {
           days: 0,
           hours: 0,
           minutes: 0,
           seconds: 0
-        });
+        };
+      }
+
+      return {
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      };
+    };
+
+    // Atualiza o tempo inicial
+    setTimeLeft(calculateTimeLeft());
+
+    // Atualiza a cada segundo
+    const timer = setInterval(() => {
+      const timeLeft = calculateTimeLeft();
+      setTimeLeft(timeLeft);
+
+      // Se chegou a zero, limpa o intervalo
+      if (timeLeft.days === 0 && timeLeft.hours === 0 && 
+          timeLeft.minutes === 0 && timeLeft.seconds === 0) {
+        clearInterval(timer);
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, []); // Executa apenas uma vez na montagem do componente
 
   return (
     <div className="airdrop-card">
