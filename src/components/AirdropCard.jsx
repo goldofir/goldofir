@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 const AirdropCard = () => {
-  // Data fixa de término (140 dias a partir de hoje)
-  const END_DATE = new Date();
-  END_DATE.setDate(END_DATE.getDate() + 140);
-  END_DATE.setHours(0, 0, 0, 0); // Define para meia-noite
+  // Data fixa de término (13/01/2025 + 140 dias = 01/06/2025)
+  const START_DATE = new Date('2025-01-13T00:00:00Z');
+  const END_DATE = new Date(START_DATE.getTime() + (140 * 24 * 60 * 60 * 1000));
 
   const [timeLeft, setTimeLeft] = useState({
-    days: 0,
+    days: 140,
     hours: 0,
     minutes: 0,
     seconds: 0
