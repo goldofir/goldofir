@@ -68,6 +68,13 @@ Go to the directory where you cloned the repository:
 cd /var/lib/docker/volumes/<volume_name>/_data
 ```
 
+### Set Correct Permissions
+
+In your project directory, adjust permissions with the following command:
+```bash
+chmod -R 755 .
+```
+
 ### Build Docker Image Locally
 
 Ensure the repository contains a Dockerfile. In the repository directory, build the local image:
@@ -92,9 +99,4 @@ Now that the image is built locally, you can deploy the stack in Portainer. Foll
 1. Access Portainer
 2. Go to "Stacks"
 3. Edit existing stack or add a new one using the updated configuration
-4. Click on "Deploy the stack"
-
-In your project directory, adjust permissions with the following command:
-```bash
-chmod -R 755 .
-``` 
+4. Click on "Deploy the stack" 
