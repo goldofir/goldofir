@@ -3,15 +3,11 @@ version: "3.7"
 services:
   goldofir_goldofir-web:
     image: ghcr.io/goldofir/goldofir:latest
-    container_name: goldofir_goldofir-web
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    networks:
-      - network_public
     volumes:
       - goldofir_data:/var/www/html
+    networks:
+      - network_public
+
     deploy:
       labels:
         - "traefik.enable=true"
