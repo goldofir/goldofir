@@ -11,7 +11,7 @@ services:
     networks:
       - network_public
     volumes:
-      - goldofir_data:/usr/share/nginx/html
+      - goldofir_data:/var/www/html
     deploy:
       labels:
         - "traefik.enable=true"
