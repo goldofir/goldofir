@@ -99,4 +99,32 @@ Now that the image is built locally, you can deploy the stack in Portainer. Foll
 1. Access Portainer
 2. Go to "Stacks"
 3. Edit existing stack or add a new one using the updated configuration
-4. Click on "Deploy the stack" 
+4. Click on "Deploy the stack"
+
+### New Stack
+
+version: "3.7"
+
+services:
+  goldofir_web_new:
+    image: goldofir:latest
+    networks:
+      - network_public
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.goldofir-new.rule=Host(`goldofir.me`)"
+        - "traefik.http.routers.goldofir-new.entrypoints=websecure"
+        - "traefik.http.routers.goldofir-new.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.goldofir-new.loadbalancer.server.port=80"
+        - "traefik.http.routers.goldofir-new.service=goldofir-new"
+        - "traefik.http.services.goldofir-new.loadbalancer.passhostheader=true"
+        - "traefik.http.middlewares.goldofir-compress.compress=true"
+        - "traefik.http.routers.goldofir-new.middlewares=goldofir-compress"
+
+networks:
+  network_public:
+    external: true
